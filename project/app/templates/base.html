@@ -1,0 +1,33 @@
+{% extends "admin/base_site.html" %}
+{% load static %}
+
+{% block title %}
+    Your Title Here
+{% endblock %}
+
+{% block extrahead %}
+<link rel="stylesheet" href=" {% static 'fonts/fonts.css'%} ">
+<link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
+ 
+ 
+{% endblock %}
+
+{% block breadcrumbs %}
+    <!-- Custom Breadcrumbs -->
+{% endblock %}
+
+{% block nav-global %}
+<!-- Custom Global Navigation -->
+{% endblock %}
+
+{% block content %}
+    <!-- Main Content -->
+{% block main %}
+<!-- Your main content here -->
+{% endblock %}
+{% endblock %}
+
+{% block footer %}
+    {{ block.super }}
+{% endblock %}
+ 
