@@ -128,16 +128,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 
 JAZZMIN_SETTINGS = {
-    "site_title": "RECORD MIS",
-    "site_header": "Record MIS",
-    "site_brand": "RECORD MIS",
+    "site_title": "LemmeCook",
+    "site_header": "LemmeCook",
+    "site_brand": "LemmeCook",
     "site_icon": "images/favicon.png",
     "site_logo": None,
-    "welcome_sign": "Record Management System",
+    "welcome_sign": "Welcome to LemmeCook !",
     "copyright": "Samir +255675839840",
     "user_avatar": None,
     "topmenu_links": [
-        {"name": "Mobile App", "url": "home", "permissions": ["auth.view_user"]},
+        {"name": "LemmeCook", "url": "home", "permissions": ["auth.view_user"]},
         {"model": "auth.User"},
     ],
     "show_sidebar": True,

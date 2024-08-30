@@ -2,14 +2,16 @@
 {% load static %}
 
 {% block title %}
-    Your Title Here
+    LemmeCook Admin
 {% endblock %}
 
 {% block extrahead %}
 <link rel="stylesheet" href=" {% static 'fonts/fonts.css'%} ">
 <link rel="stylesheet" href="{% static 'dist/css/adminlte.min.css' %}">
- 
- 
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name"><a href="{% url 'admin:index' %}">LemmeCook Admin</a></h1>
 {% endblock %}
 
 {% block breadcrumbs %}
@@ -30,4 +32,3 @@
 {% block footer %}
     {{ block.super }}
 {% endblock %}
- 

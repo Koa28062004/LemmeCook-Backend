@@ -6,7 +6,7 @@ from django.utils.html import format_html
 
 @admin.register(EmployeeRole)
 class EmployeeRoleAdmin(admin.ModelAdmin):
-    list_display = ('RoleName',)
+    list_display = ('RoleName', 'RegisteredDate')
     search_fields = ('RoleName',)
     list_filter = ('RegisteredDate',)
     fieldsets = (
