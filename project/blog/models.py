@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 from meal.models import Meal
 from users.models import Users
 

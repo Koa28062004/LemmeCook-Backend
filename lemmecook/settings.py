@@ -39,9 +39,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "meal",
     "users",
-    "blog",
-    "schedule",
-    "jazzmin"
+    "blog"
 ]
 
 MIDDLEWARE = [
@@ -126,107 +124,3 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-JAZZMIN_SETTINGS = {
-    "site_title": "LemmeCook",
-    "site_header": "LemmeCook",
-    "site_brand": "LemmeCook",
-    "site_icon": "images/favicon.png",
-    "site_logo": None,
-    "welcome_sign": "Welcome to LemmeCook !",
-    "copyright": "Samir +255675839840",
-    "user_avatar": None,
-    "topmenu_links": [
-        {"name": "LemmeCook", "url": "home", "permissions": ["auth.view_user"]},
-        {"model": "auth.User"},
-    ],
-    "show_sidebar": True,
-    "navigation_expanded": True,
-    "icons": {
-        "auth": "fas fa-users-cog",
-        "auth.user": "fas fa-user",
-        "users.User": "fas fa-user",
-        "auth.Group": "fas fa-users",
-        "admin.LogEntry": "fas fa-file",
-        "Vikao.Mahudhurio": "fas fa-users",
-        "app.Unit": "fas fa-plus",
-        "app.Domain": "fas fa-building",
-        "app.CustomUser": "fas fa-user",
-        "app.AfflictionType": "fas fa-plus",
-        "app.Affliction": "fas fa-car-crash",
-        "app.PhoneBook": "fas fa-address-book",
-        "app.WorkMeeting": "fas fa-handshake",
-        "app.CustomerSupport": "fas fa-headset",
-        "Vikao.Type": "fas fa-plus",
-    },
-    "default_icon_parents": "fas fa-chevron-circle-right",
-    "default_icon_children": "fas fa-arrow-circle-right",
-    "related_modal_active": False,
-    "hide_apps": [
-        "django.contrib.auth",
-        "django_summernote",
-    ],
-    "custom_js": None,
-    "show_ui_builder": True,
-    "changeform_format": "horizontal_tabs",
-    "changeform_format_overrides": {
-        "auth.user": "collapsible",
-        "auth.group": "vertical_tabs",
-    },
-}
-JAZZMIN_UI_TWEAKS = {
-    "navbar_small_text": True,
-    "footer_small_text": True,
-    "body_small_text": True,
-    "brand_small_text": True,
-    "brand_colour": "navbar-secondary",
-    "accent": "accent-lightblue",
-    "navbar": "navbar-navy navbar-dark",
-    "no_navbar_border": False,
-    "navbar_fixed": True,
-    "layout_boxed": False,
-    "footer_fixed": True,
-    "sidebar_fixed": True,
-    "sidebar": "sidebar-dark-lightblue",
-    "sidebar_nav_small_text": True,
-    "sidebar_disable_expand": False,
-    "sidebar_nav_child_indent": False,
-    "sidebar_nav_compact_style": False,
-    "sidebar_nav_legacy_style": True,
-    "sidebar_nav_flat_style": False,
-    "theme": "sandstone",
-    "dark_mode_theme": "slate",
-    "button_classes": {
-        "primary": "btn-primary",
-        "secondary": "btn-secondary",
-        "info": "btn-info",
-        "warning": "btn-warning",
-        "danger": "btn-danger",
-        "success": "btn-primary",
-    },
-    "actions_sticky_top": True,
-}
-
-STATIC_URL = "static/"
-import os
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-# swapped User Model
-
-LOGIN_REDIRECT_URL = "/"
-
-
-# media registration
-MEDIA_URL = "/media/"
-MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
-# redirect user to jazzmin login when he tries to access protected page
-AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
-    # Other authentication backends if applicable
-]
-LOGIN_URL = "/admin/login/"
