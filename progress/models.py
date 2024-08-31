@@ -1,8 +1,6 @@
 from django.db import models
 from users.models import Users
 
-# Create your models here.
-
 class TodayProgress(models.Model):
     progress_id = models.AutoField(primary_key=True, unique=True)
     user_id = models.ForeignKey(Users, to_field="id", on_delete=models.CASCADE, related_name='progress')
