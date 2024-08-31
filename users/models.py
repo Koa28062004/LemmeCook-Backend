@@ -7,11 +7,10 @@ class Profile(models.Model):
     registeredDate = models.DateTimeField(auto_now_add=True)
     avatar_link = models.CharField(
         max_length=255,
-        default="https://ppbcpbhpzrhbhikjrtbb.supabase.co/storage/v1/object/public/images/ntmcuitluhlo_1694650728.778543",
+        blank=True
     )
-
     def __str__(self):
-        return self.id
+        return f"ProfileID: {self.id} - {self.fullName}"
 
 
 class Users(models.Model):
@@ -22,4 +21,5 @@ class Users(models.Model):
     profile_id = models.ForeignKey(Profile, to_field="id", on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.id
+        return f"UserID: {self.id} - {self.username}"
+

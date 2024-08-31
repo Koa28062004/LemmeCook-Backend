@@ -9,3 +9,6 @@ class TodayProgress(models.Model):
     fat = models.FloatField()
     protein = models.FloatField()
     carb = models.FloatField()
+
+    def __str__(self):
+        return f"{self.user_id} - Date: {self.date}"
