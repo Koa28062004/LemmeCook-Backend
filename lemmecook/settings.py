@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     "blog",
     "users",
     "meal",
-    "progress"
+    "progress",
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -52,6 +53,8 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.10.10', 'localhost', '127.0.0.1']
 
 ROOT_URLCONF = "lemmecook.urls"
 
