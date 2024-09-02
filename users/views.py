@@ -15,8 +15,10 @@ def register(request):
             username = data.get('username')
             email = data.get('email')
             password = data.get('password')
+            fullName = data.get('fullName')
+            language = "English"
 
-            print(username, email, password)
+            print(username, email, password, fullName)
 
             # Check if the username already exists
             if Users.objects.filter(username=username).exists():
@@ -27,7 +29,8 @@ def register(request):
                 return JsonResponse({"status": 'That email is being used'}, status=400)
 
             # Register the user
-            user = Users.objects.create(username=username, password=password, email=email)
+            profile = Profile.objects.create(fullName=fullName, language=language)
+            user = Users.objects.create(username=username, password=password, email=email, profile_id=profile)
             return JsonResponse({"status": 'success'}, status=201)
         
         except json.JSONDecodeError:

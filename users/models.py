@@ -18,7 +18,7 @@ class Users(models.Model):
     username = models.CharField(max_length=255, blank=False)
     email = models.EmailField(max_length=255, unique=True, blank=False)
     password = models.CharField(max_length=255, blank=False)
-    # profile_id = models.ForeignKey(Profile, to_field="id", on_delete=models.CASCADE)
+    profile_id = models.ForeignKey(Profile, to_field="id", on_delete=models.CASCADE)
 
     def __str__(self):
         return f"UserID: {self.id} - {self.username}"
