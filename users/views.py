@@ -28,7 +28,7 @@ def register(request):
 
             # Register the user
             user = Users.objects.create(username=username, password=password, email=email)
-            return JsonResponse({"status": 'You are now registered and can log in'}, status=201)
+            return JsonResponse({"status": 'success'}, status=201)
         
         except json.JSONDecodeError:
             return JsonResponse({"status": "Invalid JSON"}, status=400)
@@ -45,12 +45,9 @@ def login(request):
         email = data.get('email')
         password = data.get('password')
 
-        user = auth.authenticate(request=request, username=email, password=password)
-
-        if user is not None:
-            auth.login(request, user)
-            return JsonResponse(
-                {"status": "You are now logged in"},
+        if Users.objects.filter(email=email, password=password).exists():
+                return JsonResponse(
+                {"status": "success"},
                 status=200
             )
         else:
@@ -71,3 +68,25 @@ def get_user(request):
         )
     else:
         return HttpResponse("Get User")
+
+@csrf_exempt
+def forgetPassword(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data.get('email')
+        newPassword = data.get('newPassword')
+        if Users.objects.filter(email=email).exists():
+            user = Users.objects.get(email=email)
+            user.password = newPassword
+            user.save()
+            return JsonResponse(
+                {"status": "success"},
+                status=200
+            )
+        else:
+            return JsonResponse(
+                {"status": "Invalid email"},
+                status=403
+            )
+    else:
+        return HttpResponse("Forget Password")
