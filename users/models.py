@@ -3,7 +3,6 @@ from django.db import models
 class Profile(models.Model):
     id = models.AutoField(primary_key=True, unique=True)
     fullName = models.CharField(max_length=255, blank=False)
-    language = models.CharField(max_length=255, blank=False)
     registeredDate = models.DateTimeField(auto_now_add=True)
     avatar_link = models.CharField(
         max_length=255,

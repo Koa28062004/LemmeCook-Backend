@@ -16,7 +16,6 @@ def register(request):
             email = data.get('email')
             password = data.get('password')
             fullName = data.get('fullName')
-            language = "English"
 
             print(username, email, password, fullName)
 
@@ -29,7 +28,7 @@ def register(request):
                 return JsonResponse({"status": 'That email is being used'}, status=400)
 
             # Register the user
-            profile = Profile.objects.create(fullName=fullName, language=language)
+            profile = Profile.objects.create(fullName=fullName)
             user = Users.objects.create(username=username, password=password, email=email, profile_id=profile)
             return JsonResponse({"status": 'success'}, status=201)
         
