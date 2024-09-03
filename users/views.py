@@ -26,7 +26,7 @@ def register(request):
             # Register the user
             profile = Profile.objects.create(fullName=fullName)
             user = Users.objects.create(username=username, password=password, email=email, profile_id=profile)
-            return JsonResponse({"status": 'success'}, status=200)
+            return JsonResponse({"status": 'success', "userId": str(user.id)}, status=200)
         
         except json.JSONDecodeError:
             return JsonResponse({"status": "Invalid JSON"}, status=200)
@@ -58,9 +58,11 @@ def login(request):
         email = data.get('email')
         password = data.get('password')
 
-        if Users.objects.filter(email=email, password=password).exists():
+        user = Users.objects.filter(email=email, password=password)
+
+        if user.exists():
                 return JsonResponse(
-                {"status": "success"},
+                {"status": "success", "userId": user.id},
                 status=200
             )
         elif not Users.objects.filter(email=email).exists():

@@ -54,7 +54,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ALLOWED_HOSTS = ['0.0.0.0', '192.168.1.121', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.1.121', 'localhost', '127.0.0.1', '10.0.2.2']
 
 ROOT_URLCONF = "lemmecook.urls"
 
