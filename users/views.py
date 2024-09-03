@@ -21,24 +21,35 @@ def register(request):
 
             # Check if the username already exists
             if Users.objects.filter(username=username).exists():
-                return JsonResponse({"status": 'That username is taken'}, status=400)
-
-            # Check if the email already exists
-            elif Users.objects.filter(email=email).exists():
-                return JsonResponse({"status": 'That email is being used'}, status=400)
+                return JsonResponse({"status": 'That username is taken'}, status=200)
 
             # Register the user
             profile = Profile.objects.create(fullName=fullName)
             user = Users.objects.create(username=username, password=password, email=email, profile_id=profile)
-            return JsonResponse({"status": 'success'}, status=201)
+            return JsonResponse({"status": 'success'}, status=200)
         
         except json.JSONDecodeError:
-            return JsonResponse({"status": "Invalid JSON"}, status=400)
+            return JsonResponse({"status": "Invalid JSON"}, status=200)
         except Exception as e:
             print(e)  # Log the exception for debugging purposes
-            return JsonResponse({"status": "Internal server error"}, status=500)
+            return JsonResponse({"status": "Internal server error"}, status=200)
     
     return HttpResponse("Method not allowed", status=405)
+
+@csrf_exempt
+def check_email(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            email = data.get('email')
+
+            if Users.objects.filter(email=email).exists():
+                return JsonResponse({"status": 'Email already exists'}, status=200)
+            else:
+                return JsonResponse({"status": 'success'}, status=200)
+        except json.JSONDecodeError:
+            return JsonResponse({"status": 'Invalid JSON'}, status=400)
+    return JsonResponse({"status": 'Method not allowed'}, status=405)
     
 @csrf_exempt
 def login(request):
