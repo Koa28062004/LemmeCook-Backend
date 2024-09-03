@@ -14,7 +14,7 @@ def get_allergies(request):
         )
 
 @csrf_exempt
-def get_dieats(request):
+def get_diets(request):
     if request.method == 'GET':
         diets = Diets.objects.all()
         return JsonResponse(
