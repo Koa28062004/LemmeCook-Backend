@@ -52,10 +52,15 @@ def login(request):
                 {"status": "success"},
                 status=200
             )
-        else:
+        elif not Users.objects.filter(email=email).exists():
             return JsonResponse(
-                {"status": "Invalid credentials"},
-                status=403
+                {"status": "Wrong email"},
+                status=200
+            )
+        elif Users.objects.filter(email=email).exists() and not Users.objects.filter(password=password).exists() :
+            return JsonResponse(
+                {"status": "Wrong Password"},
+                status=200
             )
         
     else: return HttpResponse("Login")
