@@ -44,3 +44,25 @@ def add_user_allergies(request):
             return JsonResponse({"status": "success"}, status=201)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
+
+@csrf_exempt
+def add_user_diets(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            user_id = data.get("userId")
+            diets = data.get("diets", [])
+
+            # Debugging log
+            print(f"Received userId: {user_id}")
+            print(f"Received diets: {diets}")
+
+            user = Users.objects.get(id=user_id)
+
+            for diet_name in diets:
+                diet = Diets.objects.get(diet=diet_name)
+                User_Diet.objects.create(user_id=user, diet_id=diet)
+            
+            return JsonResponse({"status": "success"}, status=201)
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=400)
