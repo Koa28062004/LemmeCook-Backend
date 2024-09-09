@@ -67,68 +67,79 @@ def goal_view(request):
 
 @csrf_exempt
 def progress_view(request):
-  if request.method == 'POST':
-    try:
-      data = json.loads(request.body)
-      user_id = data.get('user_id')
-      date = data.get('date')
-      calories = data.get('calories')
-      fat = data.get('fat')
-      protein = data.get('protein')
-      carb = data.get('carb')
+	if request.method == 'POST':
+		try:
+			data = json.loads(request.body)
+			user_id = data.get('user_id')
+			date = data.get('date')
+			calories = data.get('calories')
+			fat = data.get('fat')
+			protein = data.get('protein')
+			carb = data.get('carb')
 
-      # Retrieve or create the user's progress for the given date
-      progress, created = TodayProgress.objects.get_or_create(user_id=user_id, date=date)
+			# Retrieve or create the user's progress for the given date
+			progress, created = TodayProgress.objects.get_or_create(user_id=user_id, date=date)
 
-      # Update the progress fields
-      if calories is not None:
-          progress.calories = calories
-      if fat is not None:
-          progress.fat = fat
-      if protein is not None:
-          progress.protein = protein
-      if carb is not None:
-          progress.carb = carb
+			# Update the progress fields
+			if calories is not None:
+					progress.calories = calories
+			if fat is not None:
+					progress.fat = fat
+			if protein is not None:
+					progress.protein = protein
+			if carb is not None:
+					progress.carb = carb
 
-      # Save the updated progress
-      progress.save()
+			# Save the updated progress
+			progress.save()
 
-      message = 'Progress created successfully' if created else 'Progress updated successfully'
-      return JsonResponse({'status': 'success', 'message': message}, status=200)
+			message = 'Progress created successfully' if created else 'Progress updated successfully'
+			return JsonResponse({'status': 'success', 'message': message}, status=200)
 
-    except json.JSONDecodeError:
-      return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
-    except Exception as e:
-      return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+		except json.JSONDecodeError:
+			return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+		except Exception as e:
+			return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-  elif request.method == 'GET':
-    try:
-      # Extract the user_id and date from query parameters
-      user_id = request.GET.get('user_id')
-      date = request.GET.get('date')
+	elif request.method == 'GET':
+		try:
+			# Extract the user_id and date from query parameters
+			user_id = request.GET.get('user_id')
+			date = request.GET.get('date')
 
-      if not user_id or not date:
-          return JsonResponse({'status': 'error', 'message': 'user_id and date are required'}, status=400)
+			if not user_id or not date:
+				return JsonResponse({'status': 'error', 'message': 'user_id and date are required'}, status=400)
 
-      # Retrieve the user's progress for the given date
-      progress = TodayProgress.objects.get(user_id=user_id, date=date)
+			# Check if the user exists
+			if not Users.objects.filter(id=user_id).exists():
+				return JsonResponse({'status': 'error', 'message': 'User not found'}, status=404)
 
-      # Return the progress as a JSON response
-      progress_data = {
-          'user_id': progress.user_id.id,
-          'date': progress.date,
-          'calories': progress.calories,
-          'fat': progress.fat,
-          'protein': progress.protein,
-          'carb': progress.carb
-      }
+			# Retrieve the user's progress for the given date
+			try:
+				progress = TodayProgress.objects.get(user_id=user_id, date=date)
+				progress_data = {
+						'user_id': progress.user_id.id,
+						'date': progress.date,
+						'calories': progress.calories,
+						'fat': progress.fat,
+						'protein': progress.protein,
+						'carb': progress.carb
+				}
+			except TodayProgress.DoesNotExist:
+				# If no progress entry found, return an object with all zeroes
+				progress_data = {
+						'user_id': user_id,
+						'date': date,
+						'calories': 0,
+						'fat': 0,
+						'protein': 0,
+						'carb': 0
+				}
 
-      return JsonResponse({'status': 'success', 'progress': progress_data}, status=200)
+			return JsonResponse({'status': 'success', 'progress': progress_data}, status=200)
 
-    except TodayProgress.DoesNotExist:
-      return JsonResponse({'status': 'error', 'message': 'Progress not found'}, status=404)
-    except Exception as e:
-      return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+		except Exception as e:
+			return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
 
-  else:
-    return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+	else:
+		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
