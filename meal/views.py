@@ -66,3 +66,42 @@ def add_user_diets(request):
             return JsonResponse({"status": "success"}, status=201)
         except Exception as e:
             return JsonResponse({"error": str(e)}, status=400)
+        
+@csrf_exempt
+def favorites_view(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_id = data.get('user_id')
+            meal_id = data.get('meal_id')
+
+            # Create a new User_Meal entry
+            user_meal, created = User_Meal.objects.get_or_create(user_id=user_id, meal_id=meal_id)
+
+            message = 'Favorite meal added successfully' if created else 'Favorite meal already exists'
+            return JsonResponse({'status': 'success', 'message': message}, status=200)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    elif request.method == 'GET':
+        try:
+            # Extract the user_id from query parameters
+            user_id = request.GET.get('user_id')
+
+            if not user_id:
+                return JsonResponse({'status': 'error', 'message': 'user_id is required'}, status=400)
+
+            # Retrieve all favorite meals for the given user
+            user_meals = User_Meal.objects.filter(user_id=user_id)
+            meal_list = [um.meal_id.id for um in user_meals]
+
+            return JsonResponse({'status': 'success', 'favorites': meal_list}, status=200)
+
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
