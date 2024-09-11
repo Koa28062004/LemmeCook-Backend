@@ -15,23 +15,20 @@ def goal_view(request):
       protein = data.get('protein')
       carb = data.get('carb')
       
-      goal = Goal.objects.get(user_id = user_id)
-      
-      if calories is not None:
-        goal.calories = calories
-      if fat is not None:
-        goal.fat = fat
-      if protein is not None:
-        goal.protein = protein
-      if carb is not None:
-        goal.carb = carb
-        
-      goal.save()
-      
-      return JsonResponse({'status': 'success', 'message': 'Goal updated successfully'}, status = 200)
+      # Use update_or_create to either update or create a Goal object
+      goal, created = Goal.objects.update_or_create(
+        user_id=user_id,  # This is the condition to find the goal
+        defaults={
+          'calories': calories,
+          'fat': fat,
+          'protein': protein,
+          'carb': carb,
+        }
+      )
+
+      message = 'Goal created successfully' if created else 'Goal updated successfully'
+      return JsonResponse({'status': 'success', 'message': message}, status=200)
     
-    except Goal.DoesNotExist:
-      return JsonResponse({'status': 'error', 'message': 'Goal not found'}, status = 404)
     except json.JSONDecodeError:
       return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status = 400)
     except Exception as e:
@@ -77,21 +74,17 @@ def progress_view(request):
 			protein = data.get('protein')
 			carb = data.get('carb')
 
-			# Retrieve or create the user's progress for the given date
-			progress, created = TodayProgress.objects.get_or_create(user_id=user_id, date=date)
-
-			# Update the progress fields
-			if calories is not None:
-					progress.calories = calories
-			if fat is not None:
-					progress.fat = fat
-			if protein is not None:
-					progress.protein = protein
-			if carb is not None:
-					progress.carb = carb
-
-			# Save the updated progress
-			progress.save()
+			# Update or create the user's progress for the given date
+			progress, created = TodayProgress.objects.update_or_create(
+        user_id=user_id, 
+        date=date,
+        defaults={
+          'calories': calories,
+          'fat': fat,
+          'protein': protein,
+          'carb': carb
+        }
+      )
 
 			message = 'Progress created successfully' if created else 'Progress updated successfully'
 			return JsonResponse({'status': 'success', 'message': message}, status=200)
