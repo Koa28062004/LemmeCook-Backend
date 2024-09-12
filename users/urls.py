@@ -12,4 +12,5 @@ urlpatterns = [
     path('change_fullName', views.change_fullName, name='change_fullName'),
     path('change_username', views.change_username, name='change_username'),
     path('change_avatar', views.change_avatar, name='change_avatar'),
+    path('google_check_user_exist', views.google_check_user_exist, name='google_check_user_exist'),
 ]

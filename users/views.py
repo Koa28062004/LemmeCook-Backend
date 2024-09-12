@@ -186,3 +186,23 @@ def change_avatar(request):
         )
     else:
         return HttpResponse("Change Avatar")
+    
+@csrf_exempt
+def google_check_user_exist(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        email = data.get('email')
+
+        if Users.objects.filter(email=email).exists():
+            user = Users.objects.get(email=email)
+            return JsonResponse(
+                {"status": "success", "userId": str(user.id)},
+                status=200
+            )
+        else:
+            return JsonResponse(
+                {"status": "Sign up"},
+                status=200
+            )
+    else:
+        return HttpResponse("Google Check User Exist")
