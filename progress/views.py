@@ -60,7 +60,6 @@ def goal_view(request):
   
   else:
     return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status = 405)
-  
 
 @csrf_exempt
 def progress_view(request):

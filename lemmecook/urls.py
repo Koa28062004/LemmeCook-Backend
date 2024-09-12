@@ -21,4 +21,5 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("users/", include("users.urls")),
     path("meal/", include("meal.urls")),
+    path("progress/", include("progress.urls")),
 ]
