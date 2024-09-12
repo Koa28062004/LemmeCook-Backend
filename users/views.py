@@ -169,3 +169,20 @@ def change_username(request):
         )
     else:
         return HttpResponse("Change Username")
+
+@csrf_exempt
+def change_avatar(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        userId = data.get('userId')
+        newAvatar = data.get('newAvatar')
+
+        user = Users.objects.get(id=userId)
+        user.profile_id.avatar_link = newAvatar
+        user.profile_id.save()
+        return JsonResponse(
+            {"status": "success"},
+            status=200
+        )
+    else:
+        return HttpResponse("Change Avatar")
