@@ -135,3 +135,33 @@ def progress_view(request):
 
 	else:
 		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+
+@csrf_exempt
+def change_goal(request):
+	if request.method == 'POST':
+		try:
+			data = json.loads(request.body)
+			user_id = data.get('user_id')
+			calories = data.get('calories')
+			fat = data.get('fat')
+			protein = data.get('protein')
+			carb = data.get('carb')
+			
+			goal = Goal.objects.get(user_id = user_id)
+			goal.calories = calories
+			goal.fat = fat
+			goal.protein = protein
+			goal.carb = carb
+			goal.save()
+			
+			return JsonResponse({'status': 'success', 'message': 'Goal updated successfully'}, status=200)
+			
+		except Goal.DoesNotExist:
+			return JsonResponse({'status': 'error', 'message': 'Goal not found'}, status=404)
+		except json.JSONDecodeError:
+			return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status = 400)
+		except Exception as e:
+			return JsonResponse({'status': 'error', 'message': str(e)}, status = 500)
+		
+	else:
+		return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status = 405)
