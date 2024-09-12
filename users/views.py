@@ -62,7 +62,7 @@ def login(request):
 
         if user.exists():
             return JsonResponse(
-                {"status": "success", "userId": str(user.id)},
+                {"status": "success", "userId": str(user[0].id)},
                 status=200
             )
         elif not Users.objects.filter(email=email).exists():
