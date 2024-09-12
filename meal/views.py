@@ -105,3 +105,28 @@ def favorites_view(request):
 
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)
+    
+@csrf_exempt
+def delete_favorite(request):
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body)
+            user_id = data.get('userId')
+            meal_id = data.get('meal_id')
+
+            # Check if the User_Meal entry exists
+            user_meal = User_Meal.objects.filter(user_id=user_id, meal_id=meal_id)
+
+            if user_meal.exists():
+                user_meal.delete()
+                return JsonResponse({'status': 'success', 'message': 'Favorite meal removed successfully'}, status=200)
+            else:
+                return JsonResponse({'status': 'error', 'message': 'Favorite meal does not exist'}, status=404)
+
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=405)

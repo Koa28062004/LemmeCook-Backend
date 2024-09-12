@@ -110,3 +110,62 @@ def forgetPassword(request):
             )
     else:
         return HttpResponse("Forget Password")
+    
+@csrf_exempt
+def change_password(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        userId = data.get('userId')
+        oldPassword = data.get('oldPassword')
+        newPassword = data.get('newPassword')
+
+        user = Users.objects.get(id=userId)
+
+        if user.password == oldPassword:
+            user.password = newPassword
+            user.save()
+            return JsonResponse(
+                {"status": "success"},
+                status=200
+            )
+        else:
+            return JsonResponse(
+                {"status": "Invalid password"},
+                status=403
+            )
+    else:
+        return HttpResponse("Change Password")
+    
+@csrf_exempt
+def change_fullName(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        userId = data.get('userId')
+        newFullName = data.get('newFullName')
+
+        user = Users.objects.get(id=userId)
+        user.profile_id.fullName = newFullName
+        user.profile_id.save()
+        return JsonResponse(
+            {"status": "success"},
+            status=200
+        )
+    else:
+        return HttpResponse("Change Full Name")
+
+@csrf_exempt
+def change_username(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        userId = data.get('userId')
+        newUsername = data.get('newUsername')
+
+        user = Users.objects.get(id=userId)
+        user.username = newUsername
+        user.save()
+        return JsonResponse(
+            {"status": "success"},
+            status=200
+        )
+    else:
+        return HttpResponse("Change Username")
