@@ -141,7 +141,7 @@ def change_goal(request):
 	if request.method == 'POST':
 		try:
 			data = json.loads(request.body)
-			user_id = data.get('user_id')
+			user_id = data.get('userId')
 			calories = data.get('calories')
 			fat = data.get('fat')
 			protein = data.get('protein')
