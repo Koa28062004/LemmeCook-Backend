@@ -3,7 +3,7 @@ from users.models import Users
 
 class Meal(models.Model):
     id = models.IntegerField(primary_key=True, unique=True)
-    rating = models.IntegerField()
+    rating = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         return f"MealID: {self.id}"
