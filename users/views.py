@@ -3,8 +3,6 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 import json
 from .models import Users, Profile
-from django.contrib import messages, auth
-from django.contrib.auth.hashers import make_password
 
 @csrf_exempt
 def register(request):
@@ -89,19 +87,71 @@ def get_user(request):
     else:
         return HttpResponse("Get User")
     
-@csrf_exempt   
+@csrf_exempt
 def get_user_info(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        userId = data.get('userId')
-        user = Users.objects.get(id=userId)
-        return JsonResponse(
-            {"username": user.username, "email": user.email, "fullName": user.profile_id.fullName, "avatar_link": user.profile_id.avatar_link, "password": user.password},
-            status=200
-        )
+    if request.method == "GET":
+        userId = request.GET.get('userId')
+        try:
+            user = Users.objects.get(id=userId)
+            return JsonResponse({
+                "username": user.username, 
+                "fullName": user.profile_id.fullName
+            }, status=200)
+        except Users.DoesNotExist:
+            return JsonResponse({"error": "User not found"}, status=404)
     else:
-        return HttpResponse("Get User Info")
+        return JsonResponse({"error": "Invalid request method"}, status=400)
+    
+from django.http import JsonResponse, HttpResponse
+from django.views.decorators.csrf import csrf_exempt
+from .models import Users, Profile
 
+@csrf_exempt
+def update_user_info(request):
+    if request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            # Extract form data and file from the request
+            userId = data.get('userId')
+            newUsername = data.get('username')
+            newFullName = data.get('fullName')
+            password = data.get('password')
+            newPassword = data.get('newPassword')
+            avatar = request.FILES.get('avatar')  # Retrieve the uploaded file
+
+            # Print data to debug
+            print(userId, newUsername, newFullName, password, newPassword)
+
+            user = Users.objects.get(id=userId)
+            profile = user.profile_id
+
+            if user.password != password:
+                return JsonResponse({"status": "Invalid Password"}, status=400)
+
+            user.username = newUsername
+            if newPassword:
+                user.password = newPassword
+
+            profile.fullName = newFullName
+
+            # Handle avatar file upload
+            if avatar:
+                profile.avatar = avatar
+
+            user.save()
+            profile.save()
+
+            return JsonResponse({"status": "success"}, status=200)
+
+        except Users.DoesNotExist:
+            return JsonResponse({"status": "User not found"}, status=404)
+
+        except Exception as e:
+            return JsonResponse({"status": "Error", "message": str(e)}, status=500)
+
+    else:
+        return HttpResponse("Method not allowed", status=405)
+    
 @csrf_exempt
 def forgetPassword(request):
     if request.method == "POST":
@@ -123,82 +173,6 @@ def forgetPassword(request):
             )
     else:
         return HttpResponse("Forget Password")
-    
-@csrf_exempt
-def change_password(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        userId = data.get('userId')
-        oldPassword = data.get('oldPassword')
-        newPassword = data.get('newPassword')
-
-        user = Users.objects.get(id=userId)
-
-        if user.password == oldPassword:
-            user.password = newPassword
-            user.save()
-            return JsonResponse(
-                {"status": "success"},
-                status=200
-            )
-        else:
-            return JsonResponse(
-                {"status": "Invalid password"},
-                status=403
-            )
-    else:
-        return HttpResponse("Change Password")
-    
-@csrf_exempt
-def change_fullName(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        userId = data.get('userId')
-        newFullName = data.get('newFullName')
-
-        user = Users.objects.get(id=userId)
-        user.profile_id.fullName = newFullName
-        user.profile_id.save()
-        return JsonResponse(
-            {"status": "success"},
-            status=200
-        )
-    else:
-        return HttpResponse("Change Full Name")
-
-@csrf_exempt
-def change_username(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        userId = data.get('userId')
-        newUsername = data.get('newUsername')
-
-        user = Users.objects.get(id=userId)
-        user.username = newUsername
-        user.save()
-        return JsonResponse(
-            {"status": "success"},
-            status=200
-        )
-    else:
-        return HttpResponse("Change Username")
-
-@csrf_exempt
-def change_avatar(request):
-    if request.method == "POST":
-        data = json.loads(request.body)
-        userId = data.get('userId')
-        newAvatar = data.get('newAvatar')
-
-        user = Users.objects.get(id=userId)
-        user.profile_id.avatar_link = newAvatar
-        user.profile_id.save()
-        return JsonResponse(
-            {"status": "success"},
-            status=200
-        )
-    else:
-        return HttpResponse("Change Avatar")
     
 @csrf_exempt
 def google_check_user_exist(request):
