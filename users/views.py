@@ -117,7 +117,7 @@ def update_user_info(request):
             newFullName = data.get('fullName')
             password = data.get('password')
             newPassword = data.get('newPassword')
-            avatar = request.FILES.get('avatar')  # Retrieve the uploaded file
+            ava .tar = request.FILES.get('avatar')  # Retrieve the uploaded file
 
             # Print data to debug
             print(userId, newUsername, newFullName, password, newPassword)
@@ -135,8 +135,8 @@ def update_user_info(request):
             profile.fullName = newFullName
 
             # Handle avatar file upload
-            if avatar:
-                profile.avatar = avatar
+            # if avatar:
+            #     profile.avatar = avatar
 
             user.save()
             profile.save()
