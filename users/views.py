@@ -88,6 +88,19 @@ def get_user(request):
         )
     else:
         return HttpResponse("Get User")
+    
+@csrf_exempt   
+def get_user_info(request):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        userId = data.get('userId')
+        user = Users.objects.get(id=userId)
+        return JsonResponse(
+            {"username": user.username, "email": user.email, "fullName": user.profile_id.fullName, "avatar_link": user.profile_id.avatar_link, "password": user.password},
+            status=200
+        )
+    else:
+        return HttpResponse("Get User Info")
 
 @csrf_exempt
 def forgetPassword(request):
