@@ -72,13 +72,31 @@ def favorites_view(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
+            print(data)
             user_id = data.get('user_id')
             meal_id = data.get('meal_id')
+            print(meal_id, user_id)
+            
+            user = Users.objects.filter(id=user_id).first()
+            print(user.__str__())
+            
+            if not user:
+                return JsonResponse({'status': 'error', 'message': 'User does not exist'}, status=400)
+            
+            meal, created_meal = Meal.objects.get_or_create(
+                id=meal_id,
+                defaults={'rating': 5}  # Default rating if creating a new meal
+            )
+            print(meal.__str__())
 
             # Create a new User_Meal entry
-            user_meal, created = User_Meal.objects.get_or_create(user_id=user_id, meal_id=meal_id)
+            user_meal, created_user_meal = User_Meal.objects.get_or_create(
+              user_id=user, 
+              meal_id=meal
+            )
+            print(user_meal.__str__())
 
-            message = 'Favorite meal added successfully' if created else 'Favorite meal already exists'
+            message = 'Favorite meal added successfully' if created_user_meal else 'Favorite meal already exists'
             return JsonResponse({'status': 'success', 'message': message}, status=200)
 
         except json.JSONDecodeError:

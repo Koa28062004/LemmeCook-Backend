@@ -25,8 +25,6 @@ SECRET_KEY = "django-insecure-hs%4lu0c4-jd&kbe)l@c0ss8n9tgart(nfyw6yr_-*7p@8h(o=
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
 
 # Application definition
 
@@ -54,7 +52,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
-ALLOWED_HOSTS = ['0.0.0.0', '192.168.1.121', 'localhost', '127.0.0.1', '10.0.2.2']
+ALLOWED_HOSTS = ['0.0.0.0', '192.168.1.121', 'localhost', '127.0.0.1', '10.0.2.2', '192.168.0.101']
 
 ROOT_URLCONF = "lemmecook.urls"
 
