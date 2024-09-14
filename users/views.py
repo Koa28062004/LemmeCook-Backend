@@ -28,7 +28,7 @@ def register(request):
             progress = TodayProgress.objects.create(user_id=user)
             goal = Goal.objects.create(user_id=user)
 
-            return JsonResponse({"status": 'success', "userId": str(user.id), "fullName": profile.fullName}, status=200)
+            return JsonResponse({"status": 'success', "userId": str(user.id), "fullName": profile.fullName, "username": user.username}, status=200)
         
         except json.JSONDecodeError:
             return JsonResponse({"status": "Invalid JSON"}, status=200)
@@ -64,7 +64,7 @@ def login(request):
 
         if user.exists():
             return JsonResponse(
-                {"status": "success", "userId": str(user[0].id), "fullName": user[0].profile_id.fullName},
+                {"status": "success", "userId": str(user[0].id), "fullName": user[0].profile_id.fullName, "username": user[0].username},
                 status=200
             )
         elif not Users.objects.filter(email=email).exists():
@@ -99,7 +99,8 @@ def get_user_info(request):
             user = Users.objects.get(id=userId)
             return JsonResponse({
                 "username": user.username, 
-                "fullName": user.profile_id.fullName
+                "fullName": user.profile_id.fullName,
+                "password": user.password
             }, status=200)
         except Users.DoesNotExist:
             return JsonResponse({"error": "User not found"}, status=404)
@@ -134,6 +135,8 @@ def update_user_info(request):
             user.username = newUsername
             if newPassword:
                 user.password = newPassword
+            else:
+                user.password = password
 
             profile.fullName = newFullName
 
