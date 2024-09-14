@@ -3,6 +3,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import HttpResponse, JsonResponse
 import json
 from .models import Users, Profile
+from progress.models import TodayProgress, Goal
 
 @csrf_exempt
 def register(request):
@@ -24,7 +25,10 @@ def register(request):
             # Register the user
             profile = Profile.objects.create(fullName=fullName)
             user = Users.objects.create(username=username, password=password, email=email, profile_id=profile)
-            return JsonResponse({"status": 'success', "userId": str(user.id)}, status=200)
+            progress = TodayProgress.objects.create(user_id=user)
+            goal = Goal.objects.create(user_id=user)
+
+            return JsonResponse({"status": 'success', "userId": str(user.id), "fullName": profile.fullName}, status=200)
         
         except json.JSONDecodeError:
             return JsonResponse({"status": "Invalid JSON"}, status=200)
@@ -60,7 +64,7 @@ def login(request):
 
         if user.exists():
             return JsonResponse(
-                {"status": "success", "userId": str(user[0].id)},
+                {"status": "success", "userId": str(user[0].id), "fullName": user[0].profile_id.fullName},
                 status=200
             )
         elif not Users.objects.filter(email=email).exists():
